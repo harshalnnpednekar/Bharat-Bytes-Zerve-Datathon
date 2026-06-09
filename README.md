@@ -16,7 +16,7 @@
 
 ## 📖 Project Overview
 
-This repository contains the 3rd prize winning machine learning pipeline and exploratory data analysis (EDA) suite developed by **Team Bharat Bytes** for the Zerve AI Datathon. The core challenge involved predicting a highly imbalanced binary classification target (with a severe 26.4:1 ratio) based on a complex, high-dimensional dataset containing both numerical and categorical features.
+This repository contains the 3rd prize winning machine learning pipeline and exploratory data analysis (EDA) suite developed by **Team Bharat Bytes** for the Zerve AI Datathon. The core challenge involved predicting a highly imbalanced binary classification target (with a severe 26.4:1 ratio) based on a massive, complex dataset of nearly half a million rows containing both numerical and categorical features.
 
 Our solution focuses on robust data stratification, intelligent categorical feature processing, and a highly optimized **CatBoost Classifier**. The model was specifically tuned to capture non-linear relationships while effectively mitigating overfitting on the minority class. Furthermore, we engineered a comprehensive, beautifully styled visualization suite that matched the premium Zerve Design System aesthetic, giving us a distinct edge in presentation and interpretability.
 
@@ -33,7 +33,7 @@ Our solution focuses on robust data stratification, intelligent categorical feat
 The core of our predictive pipeline is built upon the **CatBoost Classifier**, a state-of-the-art gradient boosting algorithm on decision trees. We selected CatBoost over other tree-based models (like XGBoost or LightGBM) primarily for its native, highly efficient handling of categorical features and its built-in mechanisms to combat overfitting—which is crucial when dealing with a severe 26.4:1 class imbalance.
 
 **Hyperparameter Engineering & Rationale:**
-- **`iterations=3000` & `early_stopping_rounds=150`:** We initialized a massive forest of 3000 trees but utilized early stopping based on validation performance. If the validation score didn't improve for 150 consecutive rounds, training halted. This guarantees we extract maximum predictive power without overfitting.
+- **`iterations=3000` & `early_stopping_rounds=150`:** We initialized a massive forest of 3000 trees but utilized early stopping based on validation performance. If the validation score didn't improve for 150 consecutive rounds, training halted. In practice, our overfitting detector successfully kicked in to halt training around iteration 1211, ensuring we locked in the optimal weights without memorizing the noise.
 - **`depth=8` & `grow_policy="Lossguide"`:** A tree depth of 8 allows the model to capture deep, complex non-linear feature interactions. The `Lossguide` grow policy (leaf-wise growth) prioritizes expanding the nodes that yield the highest loss reduction, optimizing performance.
 - **`learning_rate=0.02`:** A slow, deliberate learning rate ensures stable convergence and finer parameter adjustments across the boosting stages.
 - **`loss_function="Logloss"` & `eval_metric="AUC"`:** While Logloss drives the gradient descent, we specifically evaluated on **AUC (Area Under the ROC Curve)**. For highly imbalanced datasets, accuracy is misleading; AUC accurately measures the model's ability to rank positive events higher than negative ones. Ultimately, this rigorous tuning and evaluation pipeline yielded an impressive **Gini score of ~0.31**.
@@ -42,7 +42,7 @@ The core of our predictive pipeline is built upon the **CatBoost Classifier**, a
 - **Categorical Handling (`one_hot_max_size=2`, `max_ctr_complexity=3`):** Specifically tuned how CatBoost natively processes and combines categorical features to prevent data leakage and dimensionality explosion.
 
 ### 2. Premium Visualization Suite (`visualization_insights.ipynb`)
-We created a dedicated Jupyter Notebook engineered to provide deep exploratory insights and model evaluation metrics, all rendered with a striking, dark-mode Zerve-themed aesthetic:
+We created a dedicated Jupyter Notebook engineered to provide deep exploratory insights and model evaluation metrics based on our massive ~476K row training dataset, all rendered with a striking, dark-mode Zerve-themed aesthetic:
 - **Target Distribution Chart:** A stylized bar chart that immediately highlights the extreme class imbalance.
 - **Missing Value Matrix:** A seaborn-powered heatmap detailing data sparsity and density across all features.
 - **Feature Correlations:** Clear horizontal bar charts of the top 20 numerical features Pearson-correlated with the target variable.
